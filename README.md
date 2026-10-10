@@ -45,6 +45,7 @@ python ~/.claude/skills/mintoken/scripts/install_hooks.py --uninstall --apply   
 | `scripts/suggest_deny_rules.py` | Proposes scoped `Read(build/**)`-style deny rules. Never denies a bare tool name. |
 | `scripts/audit_tools.py` | Audits the six tools above (installed, missing, general state), measures hook injections, and browses the drain catalog |
 | `scripts/audit_config.py` | Read-only audit of settings, env, hooks, skill frontmatter and CLAUDE.md. `--profile safe\|medium\|aggressive` prints suggestions only. |
+| `scripts/measure_sessions.py` | Read-only replay of your local transcripts: context per request (median, p90, share above 200K), per-session totals, and what D1 would remove. Use `--since DATE` to compare before and after a change. |
 | `scripts/install_hooks.py` | Installs and uninstalls the hooks: diff first, explicit confirmation, backup |
 | `references/hidden-drains*.md` | 178 labelled hidden token consumers (C1–C178), written in Turkish |
 | `references/cache-awareness.md` | What breaks the prompt cache and what doesn't, plus the TTL buckets |
@@ -56,6 +57,7 @@ python scripts/audit_tools.py --drains all      # C1–C114
 python scripts/audit_tools.py --drains3         # C115–C178
 python scripts/audit_tools.py --drain 110       # one item
 python scripts/audit_config.py                  # what is set, what is on by default, what to consider
+python scripts/measure_sessions.py              # where your tokens actually go (from local transcripts)
 ```
 
 ## Verification status

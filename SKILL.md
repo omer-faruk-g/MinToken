@@ -58,6 +58,7 @@ Run `python scripts/audit_tools.py` (read-only, 3 sections).
 | `scripts/audit_tools.py` | 6-tool audit (installed / missing / general) + drain catalog |
 | `scripts/audit_config.py` | read-only settings/env/hooks/skills/CLAUDE.md audit; `--profile safe/medium/aggressive` (suggestions only) |
 | `scripts/install_hooks.py` | diff for D1/D2/D3/G2 into `~/.claude/settings.json`; dry-run default; backup; `--uninstall` |
+| `scripts/measure_sessions.py` | read-only replay of local transcripts: context per request (median/p90, share >200K), per-session totals, what D1 would remove; `--since DATE` for before/after |
 | `scripts/statusline_mintoken.py` | D3 status line: `ctx 38% · cache 91% · warm 1h (42m left) · miss 2 (cause)` |
 | `scripts/hooks/pretool_bash_filter.py` | D1 PreToolUse(Bash): pipes gradle/mvn/npm test/pytest/go test output through filter_log.py; exit code via PIPESTATUS[0]; raw output if the filter fails; returns `ask`, never `allow` |
 | `scripts/hooks/session_counter.py` | D2 optional runaway brake (tool count, re-reads, repeated errors) |
@@ -66,7 +67,7 @@ Run `python scripts/audit_tools.py` (read-only, 3 sections).
 Hook caveats: D1 only sees the **Bash** tool (not PowerShell). These are command hooks: no model calls, no context cost except what they print.
 
 ## Typical flows
-1. "Tokens/limit going fast" → B12 → `python scripts/audit_config.py` → `python scripts/audit_tools.py` → relevant drains → suggest one change → measure.
+1. "Tokens/limit going fast" → B12 → `python scripts/audit_config.py` → `python scripts/audit_tools.py` → `python scripts/measure_sessions.py` (where the tokens really go) → relevant drains → suggest one change → measure again with `--since <change date>`.
 2. Long build output → filter_log.py now; offer `install_hooks.py --only d1` (diff + approval).
 3. Before installing a new tool → A6 (scan or manual review).
 4. Settings tuning → `audit_config.py --profile safe` → user picks → diff → explicit yes → new session → measure.

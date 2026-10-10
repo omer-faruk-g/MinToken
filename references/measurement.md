@@ -9,6 +9,14 @@
 Note: `/usage` cost is a local estimate from list prices; on a subscription the plan bars matter, not billing [D]. Usage from other devices and claude.ai is NOT included in `/usage` [D] — if the plan is shared, real consumption can be higher.
 Reference from the docs: enterprise average ~$13 per developer per active day [D] — a reference, not a target.
 
+## Transcript replay (no /usage needed)
+
+`python scripts/measure_sessions.py` reads `~/.claude/projects/*/*.jsonl` (read-only) and reports context size per API request from the transcripts' own `usage` fields, de-duplicated by message id (DZ-2), plus a chars/4 replay of build/test output through `filter_log.py`.
+
+- Baseline: run it once before a change and note median / p90 / share of requests above 200K.
+- After: run `--since <date of change>` once a few new sessions exist; report "measured change: X → Y".
+- It does not see claude.ai or other devices, subagent transcripts, or background requests — combine with `/usage` when possible.
+
 ## G5 addendum — after applying a profile
 
 - Settings apply at session start (C8): measure in a NEW session.
